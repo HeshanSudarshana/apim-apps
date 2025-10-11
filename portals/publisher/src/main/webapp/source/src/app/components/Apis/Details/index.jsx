@@ -20,7 +20,7 @@ import React, { Component } from 'react';
 import { styled, useTheme } from '@mui/material/styles';
 import PropTypes from 'prop-types';
 
-import AuthManager, { isRestricted } from 'AppData/AuthManager';
+import { isRestricted } from 'AppData/AuthManager';
 import LifeCycleIcon from '@mui/icons-material/Autorenew';
 import StoreIcon from '@mui/icons-material/Store';
 import DashboardIcon from '@mui/icons-material/Dashboard';
@@ -794,11 +794,24 @@ class Details extends Component {
      * @param {boolean} apiType whether API or MCP Server
      * @returns {string[]} allowed scopes
      */
-    getAllowedScopes(apiType) {
+    getPublishAllowedScopes(apiType) {
         if (apiType.toUpperCase() === MCPServer.CONSTS.MCP) {
             return ['apim:mcp_server_publish', 'apim:mcp_server_manage', 'apim:mcp_server_import_export'];
         } else {
             return ['apim:api_publish'];
+        }
+    }
+
+    /**
+     * Get allowed scopes based on the API type
+     * @param {boolean} apiType whether API or MCP Server
+     * @returns {string[]} allowed scopes
+     */
+    getCreatePublishAllowedScopes(apiType) {
+        if (apiType.toUpperCase() === MCPServer.CONSTS.MCP) {
+            return ['apim:mcp_server_create', 'apim:mcp_server_publish', 'apim:mcp_server_manage'];
+        } else {
+            return ['apim:api_create', 'apim:api_publish', 'apim:api_manage'];
         }
     }
 
@@ -849,7 +862,6 @@ class Details extends Component {
         }
         const pathPrefix = `/${basePath}/${uuid}/`;
         const redirectUrl = pathPrefix;
-        const readOnlyUser = AuthManager.isReadOnlyUser();
         const isAsyncAPI = api && (api.type === 'WS' || api.type === 'WEBSUB' || api.type === 'SSE'
             || api.type === 'ASYNC');
         if (apiNotFound) {
@@ -1001,8 +1013,9 @@ class Details extends Component {
                                     id='left-menu-itemdeployments'
                                 />
                             </>
-                            {!readOnlyUser && (isAPIProduct || (!isAPIProduct && !api.isWebSocket()
-                                && !api.isGraphql() && !isAsyncAPI)) &&
+                            {!isRestricted(this.getCreatePublishAllowedScopes(api.apiType), api)
+                                && (isAPIProduct || (!isAPIProduct && !api.isWebSocket() && !api.isGraphql() 
+                                && !isAsyncAPI)) &&
                             (settings && settings.gatewayFeatureCatalog
                                 .gatewayFeatures[api.gatewayType ? api.gatewayType : 'wso2/synapse']
                                 .tryout.includes('tryout')) && (
@@ -1039,7 +1052,7 @@ class Details extends Component {
                                     )}
                                 </div>
                             )}
-                            {!isRestricted(this.getAllowedScopes(api.apiType), api) && (
+                            {!isRestricted(this.getPublishAllowedScopes(api.apiType), api) && (
                                 <div>
                                     <Divider />
                                     <Typography className={classes.headingText}>
@@ -1356,7 +1369,7 @@ class Details extends Component {
                                         path={Details.subPaths.MONETIZATION_PRODUCT}
                                         render={(props) => <Monetization {...props} api={api} />}
                                     />
-                                    {!readOnlyUser && (
+                                    {!isRestricted(this.getCreatePublishAllowedScopes(api.apiType), api) && (
                                         <>
                                             <Route
                                                 path={Details.subPaths.TRYOUT}

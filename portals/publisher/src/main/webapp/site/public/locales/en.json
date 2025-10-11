@@ -1708,6 +1708,7 @@
   "Apis.Details.Scopes.Roles.User.Invalid": "At least one role must be associated with the API creator",
   "Apis.Details.Scopes.Scopes.create.scopes.button": "Create Scope",
   "Apis.Details.Scopes.Scopes.create.scopes.title": "Create Local Scopes",
+  "Apis.Details.Scopes.Scopes.edit.disabled.tooltip": "You do not have permission to edit scopes",
   "Apis.Details.Scopes.Scopes.heading.edit.scope.heading": "Scopes",
   "Apis.Details.Scopes.Scopes.heading.scope.add_new": "Add New Local Scope",
   "Apis.Details.Scopes.Scopes.heading.scope.heading": "Scopes",

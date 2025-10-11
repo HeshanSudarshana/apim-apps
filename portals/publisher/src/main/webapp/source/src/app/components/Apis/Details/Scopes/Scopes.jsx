@@ -237,7 +237,8 @@ class Scopes extends React.Component {
                                                         ? (
                                                             <FormattedMessage
                                                                 id='Apis.Details.Scopes.Scopes.edit.disabled.tooltip'
-                                                                defaultMessage='You do not have permission to edit scopes'
+                                                                defaultMessage={'You do not have permission to ' + 
+                                                                    'edit scopes'}
                                                             />
                                                         )
                                                         : ''
