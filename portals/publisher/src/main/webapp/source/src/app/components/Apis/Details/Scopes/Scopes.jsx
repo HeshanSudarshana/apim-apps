@@ -453,8 +453,11 @@ class Scopes extends React.Component {
                                     id='Apis.Details.Scopes.Scopes.update.not.allowed'
                                     defaultMessage={
                                         '*You are not authorized to update scopes of'
-                                        + ' the API due to insufficient permissions'
+                                        + ' the {type} due to insufficient permissions'
                                     }
+                                    values={{
+                                        type: getTypeToDisplay(api.apiType)
+                                    }}
                                 />
                             </Typography>
                         </Grid>
